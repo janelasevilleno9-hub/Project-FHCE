@@ -117,3 +117,41 @@ title('Household Consumption Expenditure (Philippines)');
 xlabel('Time');
 ylabel('HFCE');
 grid on;
+
+%% STEP 3: ARIMA Model Selection using AIC ===== micha
+maxD = 2;
+bestAIC = inf;
+bestModel = [];
+bestPQD = [0,0,0];
+
+for d = 0:maxD
+    for p = 0:3
+        for q = 0:3
+            try
+                model = arima(p, d, q);
+                [fit, ~, logL] = estimate(model, Y, 'Display', 'off');
+                
+                numParams = p + q + 1;
+                AIC = -2*logL + 2*numParams;
+                
+                if AIC < bestAIC
+                    bestAIC = AIC;
+                    bestModel = fit;
+                    bestPQD = [p, d, q];
+                end
+            catch
+                continue;
+            end
+        end
+    end
+end
+
+%% STEP 4: Displaying the Best Model ===== micha
+fprintf('Best ARIMA Model: (%d, %d, %d)\n', bestPQD(1), bestPQD(2), bestPQD(3));
+fprintf('Best AIC: %.4f\n', bestAIC);
+
+%% STEP 5: Forecast Future Values ===== micha
+forecastSteps = 10;
+[Y_forecast, Y_MSE] = forecast(bestModel, forecastSteps, 'Y0', Y);
+
+time_forecast = (n+1):(n+forecastSteps);
