@@ -118,7 +118,7 @@ xlabel('Time');
 ylabel('HFCE');
 grid on;
 
-%% STEP 3: ARIMA Model Selection using AIC ===== micha
+%% STEP 3: ARIMA Model Selection using AIC 
 maxD = 2;
 bestAIC = inf;
 bestModel = [];
@@ -146,11 +146,11 @@ for d = 0:maxD
     end
 end
 
-%% STEP 4: Displaying the Best Model ===== micha
+%% STEP 4: Displaying the Best Model
 fprintf('Best ARIMA Model: (%d, %d, %d)\n', bestPQD(1), bestPQD(2), bestPQD(3));
 fprintf('Best AIC: %.4f\n', bestAIC);
 
-%% STEP 5: Forecast Future Values ===== micha
+%% STEP 5: Forecast Future Values
 forecastSteps = 10;
 [Y_forecast, Y_MSE] = forecast(bestModel, forecastSteps, 'Y0', Y);
 
