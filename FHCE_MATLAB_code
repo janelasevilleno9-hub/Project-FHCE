@@ -236,3 +236,22 @@ if p_arch > 0.05
 else
     fprintf('  Result: FAIL. Variance is not constant (Heteroscedasticity).\n');
 end
+
+% 5. Assumption: Zero Mean (T-Test)
+[h_t, p_t] = ttest(res);
+fprintf('T-test (Zero Mean) p-value: %.4f\n', p_t);
+fprintf('Average Residual: %.4f\n', mean(res));
+
+% 6. Visual Diagnostic Plots
+figure('Name', 'ARIMA Residual Diagnostics');
+subplot(2,2,1);
+plot(res); title('Residuals vs Time'); grid on;
+
+subplot(2,2,2);
+histogram(res); title('Histogram of Residuals');
+
+subplot(2,2,3);
+autocorr(res); title('ACF of Residuals');
+
+subplot(2,2,4);
+qqplot(res); title('Q-Q Plot for Normality');
