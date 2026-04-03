@@ -199,3 +199,40 @@ RMSE = sqrt(mean(errors.^2));
 % Display RMSE
 fprintf('RMSE (ARIMA(0,1,0)): %.2f\n', RMSE);
 
+%% STEP 8: ARIMA Assumptions Check (Residual Diagnostics)
+fprintf('\n--- DIAGNOSTIC TESTS FOR BEST MODEL (%d,%d,%d) ---\n', bestPQD);
+
+% 1. Extract the Residuals (Innovations)
+% We use 'infer' to get the errors the model made on the historical data
+res = infer(bestModel, Y);
+
+% 2. Assumption: Independence (Ljung-Box Test)
+% H0: Residuals are independent (White Noise)
+% We test at different lags (5, 10, 15)
+[h_lb, p_lb] = lbqtest(res, 'Lags', [5, 10, 15]);
+fprintf('Ljung-Box Test (Independence) p-values: %.4f, %.4f, %.4f\n', p_lb);
+if all(p_lb > 0.05)
+    fprintf('  Result: PASS. Residuals are independent (no remaining patterns).\n');
+else
+    fprintf('  Result: FAIL. Autocorrelation remains in residuals.\n');
+end
+
+% 3. Assumption: Normality (Jarque-Bera Test)
+% H0: Residuals follow a normal distribution
+[h_jb, p_jb] = jbtest(res);
+fprintf('Jarque-Bera Test (Normality) p-value: %.4f\n', p_jb);
+if p_jb > 0.05
+    fprintf('  Result: PASS. Residuals are normally distributed.\n');
+else
+    fprintf('  Result: FAIL. Residuals are non-normal (common with COVID-19 data).\n');
+end
+
+% 4. Assumption: Homoscedasticity (Engle ARCH Test)
+% H0: Residuals have constant variance (No ARCH effects)
+[h_arch, p_arch] = archtest(res);
+fprintf('Engle ARCH Test (Homoscedasticity) p-value: %.4f\n', p_arch);
+if p_arch > 0.05
+    fprintf('  Result: PASS. Residuals have constant variance.\n');
+else
+    fprintf('  Result: FAIL. Variance is not constant (Heteroscedasticity).\n');
+end
