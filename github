@@ -155,3 +155,47 @@ forecastSteps = 10;
 [Y_forecast, Y_MSE] = forecast(bestModel, forecastSteps, 'Y0', Y);
 
 time_forecast = (n+1):(n+forecastSteps);
+
+
+%% STEP 6: Plot Actual vs Forecast ===== aaron
+figure;
+plot(time, Y, 'b', 'LineWidth', 1.5); hold on;
+plot(time_forecast, Y_forecast, 'r--', 'LineWidth', 1.5);
+
+upper = Y_forecast + 1.96*sqrt(Y_MSE);
+lower = Y_forecast - 1.96*sqrt(Y_MSE);
+
+plot(time_forecast, upper, 'k:', 'LineWidth', 1);
+plot(time_forecast, lower, 'k:', 'LineWidth', 1);
+
+legend('Actual Data', 'Forecast', '95% Confidence Interval');
+title('ARIMA Forecast of Household Consumption Expenditure');
+xlabel('Time');
+ylabel('HFCE');
+grid on;
+
+
+% Saving the Graph into a picture ======
+exportgraphics(gcf, 'arima_plot.png', 'Resolution', 300);
+
+% =====================================================
+%% STEP 7: Compute RMSE for ARIMA(0,1,0) === aaron
+
+% For ARIMA(0,1,0), this is simply the previous value
+% So, we have Forecast(t) = Y(t-1)
+
+% Create forecast using lagged values
+Y_forecast_insample = Y(1:end-1);   % previous values
+
+% Actual values corresponding to forecasts
+Y_actual = Y(2:end);                % starting from second observation
+
+% Compute errors
+errors = Y_actual - Y_forecast_insample;
+
+% Compute RMSE
+RMSE = sqrt(mean(errors.^2));
+
+% Display RMSE
+fprintf('RMSE (ARIMA(0,1,0)): %.2f\n', RMSE);
+
