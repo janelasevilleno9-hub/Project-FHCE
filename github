@@ -110,7 +110,7 @@ Y = [ ...
 n = length(Y);
 time = (1:n)';
 
-%% STEP 2: Plot Original Data ===== janela
+%% STEP 2: Plot Original Data 
 figure;
 plot(time, Y, 'b', 'LineWidth', 1.5);
 title('Household Consumption Expenditure (Philippines)');
