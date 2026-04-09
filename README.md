@@ -1,5 +1,5 @@
-# Project-FHCE
-Forecasting Household Consumption Expenditure using Time Series Analysis 
+# Project-FHFCE
+Forecasting Household Final Consumption Expenditure using Time Series Analysis 
 
 This repository was created as the final course output for MAT305 Mathematical Modeling. It contains data and code on Household Consumption Expenditure, published April 2, 2026. See below for details.
 
